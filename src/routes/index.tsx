@@ -17,7 +17,7 @@ import {
 export default component$(() => {
   const billData = useStore({
     billName: "",
-    memberCount: 0,
+    memberCount: 3,
   });
 
   const nav = useNavigate();
@@ -35,6 +35,10 @@ export default component$(() => {
     }
     if (billData.memberCount === 0) {
       alert("Enter number of members");
+      return;
+    }
+    if (billData.memberCount < 2) {
+      alert("Min number of members is 2");
       return;
     }
     billData.billName = billData.billName.trim();
@@ -67,13 +71,14 @@ export default component$(() => {
             </div>
             <div>
               <label for="bill-name" class="block mb-2 text-xl font-medium">
-                Number of members
+                Number of members (default is 3)
               </label>
               <input
                 type="number"
                 id="bill-name"
                 class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Enter number of members"
+                min={2}
                 onInput$={(_, el) =>
                   (billData.memberCount = parseInt(el.value))
                 }

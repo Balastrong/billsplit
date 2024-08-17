@@ -7,11 +7,13 @@ export default component$(
     size = "regular",
     customClass = "",
     variant = "primary",
+    disabledBtn = false,
   }: {
     onClick$?: QRL<() => void>;
     size?: "regular" | "big";
     customClass?: string;
     variant?: "primary" | "secondary" | "danger";
+    disabledBtn?: boolean;
   }) => {
     const colors: Record<typeof variant, string> = {
       primary: "bg-blue-500 hover:bg-blue-700",
@@ -20,6 +22,7 @@ export default component$(
     };
     return (
       <button
+        disabled={disabledBtn}
         class={`bg-blue-500 hover:bg-blue-700 text-white font-bold ${
           size === "regular" ? "py-2 px-4" : "py-4 px-8"
         } rounded w-auto ${colors[variant]} ${customClass}`}

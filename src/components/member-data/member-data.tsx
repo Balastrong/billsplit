@@ -1,10 +1,18 @@
 import { $, component$, useComputed$ } from "@builder.io/qwik";
-import type { MemberDataStore } from "~/routes/start/[...id]";
+import type { MemberDataStore, BillStore } from "~/routes/start/[...id]";
 import Button from "../button/button";
 import { sum } from "~/utils/math";
 
 export default component$(
-  ({ store, number }: { store: MemberDataStore; number: number }) => {
+  ({
+    store,
+    billStore,
+    number,
+  }: {
+    store: MemberDataStore;
+    billStore: BillStore;
+    number: number;
+  }) => {
     const total = useComputed$(() =>
       sum(store.items.map(({ price }) => price)),
     );
@@ -52,6 +60,13 @@ export default component$(
             Total: {total}
           </div>
           <Button onClick$={$(() => store.add())}>Add item</Button>
+          <Button
+            disabledBtn={billStore.members.length < 3}
+            variant="danger"
+            onClick$={$(() => billStore.deleteMember(store.id!))}
+          >
+            Remove member
+          </Button>
         </div>
       </div>
     );

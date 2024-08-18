@@ -1,17 +1,19 @@
-import { $, component$, useComputed$ } from "@builder.io/qwik";
-import type { MemberDataStore, BillStore } from "~/routes/start/[...id]";
+import { $, component$, useComputed$, type QRL } from "@builder.io/qwik";
+import type { MemberDataStore } from "~/routes/start/[...id]";
 import Button from "../button/button";
 import { sum } from "~/utils/math";
 
 export default component$(
   ({
     store,
-    billStore,
     number,
+    deleteMemberFn,
+    membersLength,
   }: {
     store: MemberDataStore;
-    billStore: BillStore;
     number: number;
+    deleteMemberFn: QRL<(id: string) => void>;
+    membersLength: number;
   }) => {
     const total = useComputed$(() =>
       sum(store.items.map(({ price }) => price)),
@@ -61,9 +63,9 @@ export default component$(
           </div>
           <Button onClick$={$(() => store.add())}>Add item</Button>
           <Button
-            disabledBtn={billStore.members.length < 3}
+            disabledBtn={membersLength < 3}
             variant="danger"
-            onClick$={$(() => billStore.deleteMember(store.id!))}
+            onClick$={$(() => deleteMemberFn(store.id!))}
           >
             Remove member
           </Button>

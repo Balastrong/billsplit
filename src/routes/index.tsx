@@ -71,7 +71,7 @@ export default component$(() => {
             </div>
             <div>
               <label for="bill-name" class="block mb-2 text-xl font-medium">
-                Number of members (default is 3)
+                Number of members
               </label>
               <input
                 type="number"
@@ -79,6 +79,7 @@ export default component$(() => {
                 class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Enter number of members"
                 min={2}
+                value={billData.memberCount}
                 onInput$={(_, el) =>
                   (billData.memberCount = parseInt(el.value))
                 }

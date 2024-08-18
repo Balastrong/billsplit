@@ -116,16 +116,6 @@ export default component$(() => {
     isDirty.value = false;
     transactions.value = await computeSplit(store.members);
 
-    nav(
-      `/start/?billName=${
-        searchParams.get("billName") || BILL_NAME_DEFAULT
-      }&memberCount=${
-        store.members.length ||
-        searchParams.get("memberCount") ||
-        MEMBER_COUNT_DEFAULT.toString()
-      }`,
-    );
-
     const { id } = await billsStore.save({
       id: params.id || undefined,
       name: store.name,
@@ -152,7 +142,8 @@ export default component$(() => {
         <div class="flex flex-col gap-4 flex-1 items-center">
           {store.members.map((member, i) => (
             <MemberData
-              billStore={store}
+              deleteMemberFn={$(() => store.deleteMember(member.id))}
+              membersLength={store.members.length}
               key={i}
               store={member}
               number={i + 1}

@@ -16,14 +16,18 @@ export default component$(
     disabledBtn?: boolean;
   }) => {
     const colors: Record<typeof variant, string> = {
-      primary: "bg-blue-500 hover:bg-blue-700",
-      secondary: "bg-green-500 hover:bg-green-700",
-      danger: "bg-red-500 hover:bg-red-700",
+      primary: `bg-blue-500 ${
+        disabledBtn ? "opacity-50" : "hover:bg-blue-700"
+      }`,
+      secondary: `bg-green-500 ${
+        disabledBtn ? "opacity-50" : "hover:bg-green-700"
+      }`,
+      danger: `bg-red-500 ${disabledBtn ? "opacity-50" : " hover:bg-red-700"}`,
     };
     return (
       <button
         disabled={disabledBtn}
-        class={`bg-blue-500 hover:bg-blue-700 text-white font-bold ${
+        class={`bg-blue-500  text-white font-bold ${
           size === "regular" ? "py-2 px-4" : "py-4 px-8"
         } rounded w-auto ${colors[variant]} ${customClass}`}
         onClick$={onClick$}

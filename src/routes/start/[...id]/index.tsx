@@ -24,6 +24,7 @@ export type MemberDataStore = Member & {
 };
 
 const initialStore: () => MemberDataStore = () => ({
+  id: Math.random().toString(36).slice(2),
   items: [{ id: Math.random().toString(36).slice(2) }],
   add: $(function (this: MemberDataStore) {
     this.items = this.items.concat({
@@ -38,10 +39,11 @@ const initialStore: () => MemberDataStore = () => ({
   }),
 });
 
-type BillStore = {
+export type BillStore = {
   name: string;
   members: MemberDataStore[];
   clearAll: QRL<() => void>;
+  deleteMember: QRL<(id: string) => void>;
 };
 
 const BILL_NAME_DEFAULT = "Untitled Bill";
@@ -53,6 +55,11 @@ export default component$(() => {
     members: [],
     clearAll: $(function (this: BillStore) {
       this.members.forEach((member) => member.clear());
+    }),
+    deleteMember: $(function (this: BillStore, id: string) {
+      this.members = this.members.filter(
+        (member: MemberDataStore) => member.id !== id,
+      );
     }),
   });
   const nav = useNavigate();
@@ -112,7 +119,8 @@ export default component$(() => {
     const { id } = await billsStore.save({
       id: params.id || undefined,
       name: store.name,
-      members: store.members.map(({ name, items }) => ({
+      members: store.members.map(({ id, name, items }) => ({
+        id,
         name,
         items,
       })),
@@ -122,7 +130,6 @@ export default component$(() => {
       id,
       name: store.name,
     });
-
     if (!params.id) {
       nav(`/start/${id}`);
     }
@@ -134,7 +141,13 @@ export default component$(() => {
       <div class="flex flex-col md:flex-row gap-8">
         <div class="flex flex-col gap-4 flex-1 items-center">
           {store.members.map((member, i) => (
-            <MemberData key={i} store={member} number={i + 1} />
+            <MemberData
+              deleteMemberFn={$(() => store.deleteMember(member.id))}
+              membersLength={store.members.length}
+              key={i}
+              store={member}
+              number={i + 1}
+            />
           ))}
         </div>
         <div class="flex-1 text-center ">
